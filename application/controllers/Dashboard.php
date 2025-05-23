@@ -18,7 +18,7 @@ class Dashboard extends CI_Controller
 	{
 		if ($this->session->userdata('logged_in') == TRUE) {
 
-			$data['content'] = 'Home';
+			$data['content'] = 'Dashboard';
 			$data['jml_book'] = $this->M_Dashboard->get_jml_book();
 			$data['jml_transaction'] = $this->M_Dashboard->get_jml_transaction();
 			$data['jml_pengguna'] = $this->M_Dashboard->get_jml_pengguna();

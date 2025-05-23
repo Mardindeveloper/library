@@ -1,23 +1,28 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Admin extends CI_Controller {
+class Admin extends CI_Controller
+{
 
 	public function __construct()
 	{
 		parent::__construct();
 		//Do your magic here
 		$this->load->model('M_admin');
+
+		if ($this->session->userdata('logged_in')) {
+			redirect('Dashboard');
+		}
 	}
 
 	public function index()
 	{
-		if ($this->session->userdata('login') == FALSE) {
+		if ($this->session->userdata('logged_in') == FALSE) {
 			$this->load->view('login');
 		} else {
 			redirect('Dashboard');
 		}
-		
+
 	}
 	public function proses_login()
 	{
@@ -34,7 +39,7 @@ class Admin extends CI_Controller {
 			} else {
 				$this->session->set_flashdata('message', 'Username or Password must be filled!!');
 				redirect('login');
-			} 
+			}
 		}
 	}
 
@@ -63,14 +68,14 @@ class Admin extends CI_Controller {
 			} else {
 				$this->session->set_flashdata('message', 'Username or Password must be filled!!');
 				redirect('register');
-			} 
+			}
 		}
 	}
 
 	public function logout()
 	{
 		$this->session->sess_destroy();
-		redirect('login','refresh');
+		redirect('login', 'refresh');
 	}
 
 }
