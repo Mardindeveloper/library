@@ -77,13 +77,7 @@
 						</button>
 					</div>
 					<form action="<?= base_url('/category/add') ?>" method="post">
-						<div class="modal-body">
-							<div class="form-group row">
-								<div class="col-sm-3 offset-1"><label>Category Code</label></div>
-								<div class="col-sm-7">
-									<input type="number" name="category_code" required class="form-control">
-								</div>
-							</div>
+						<div class="modal-body">	
 							<div class="form-group row">
 								<div class="col-sm-3 offset-1"><label>Category Name</label></div>
 								<div class="col-sm-7">
@@ -112,13 +106,6 @@
 					<form action="<?= base_url('/category/category_update') ?>" method="post">
 						<div class="modal-body">
 							<input type="hidden" name="category_code_lama" id="category_code_lama">
-							<div class="form-group row">
-								<div class="col-sm-3 offset-1"><label>Category Code</label></div>
-								<div class="col-sm-7">
-									<input type="number" name="category_code" id="category_code" required
-										class="form-control">
-								</div>
-							</div>
 							<div class="form-group row">
 								<div class="col-sm-3 offset-1"><label>Category Name</label></div>
 								<div class="col-sm-7">
