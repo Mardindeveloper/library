@@ -17,7 +17,7 @@ class Admin extends CI_Controller
 
 	public function index()
 	{
-		if ($this->session->userdata('logged_in') == FALSE) {
+		if ($this->session->userdata('login') == FALSE) {
 			$this->load->view('login');
 		} else {
 			redirect('Dashboard');
@@ -74,8 +74,12 @@ class Admin extends CI_Controller
 
 	public function logout()
 	{
+		$this->session->unset_userdata(array_keys($this->session->userdata()));
 		$this->session->sess_destroy();
-		redirect('login', 'refresh');
+		$this->session->set_userdata('logged_in', FALSE);
+		redirect('login', 'location', 302);
+		// $this->session->sess_destroy();
+		// redirect('admin/index', 'refresh');
 	}
 
 }

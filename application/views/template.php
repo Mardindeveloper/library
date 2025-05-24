@@ -46,8 +46,8 @@
 						<!-- Navbar Menu -->
 						<ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
 							<!-- Logout    -->
-							<li class="nav-item"><a href="<?php echo base_url('admin/logout') ?>" class="nav-link logout">Logout<i
-										class="fa fa-power-off"></i></a></li>
+							<li class="nav-item"><a href="<?php echo base_url('/logout') ?>"
+									class="nav-link logout">Logout<i class="fa fa-power-off"></i></a></li>
 						</ul>
 					</div>
 				</div>
@@ -117,7 +117,7 @@
 										</a>
 								</li>
 								<li>
-									<a href="'.base_url('history').'">
+									<a href="' . base_url('history') . '">
 											<i class="fa fa-history"></i>
 											<span>History</span>
 									</a>
