@@ -52,7 +52,7 @@
                           ';
                         } 
                     ?>
-                  <form method="post" class="form-validate" action="<?php echo base_url('/admin/proses_login') ?>">
+                  <form method="post" class="form-validate" action="<?= base_url('login') ?>">
                         <h2 class="text-center mb-4 text-secondary">Login to CI - BSMS</h2>
                     <div class="form-group">
                       <input id="username" type="text" name="username" required data-msg="Please enter your username" class="input-material">
@@ -63,7 +63,7 @@
                       <label for="login-password" class="label-material">Password</label>
                     </div>
                     <div class="d-flex align-items-center justify-content-end">
-                      <a href="<?php echo base_url('/register') ?>" class="text-decoration-none fw-bold mr-3">Register New Account</a>
+                      <a href="<?= base_url('register') ?>" class="text-decoration-none fw-bold mr-3">Register New Account</a>
                       <input type="submit" name="submit" class="btn btn-primary rounded-1" value="Login">
                     </div>
                     <!-- This should be submit button but I replaced it with <a> for demo purposes-->

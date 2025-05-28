@@ -7,8 +7,8 @@ class Dashboard extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('M_Dashboard');
-		
+		$this->load->model('DashboardModel');
+
 		if (!$this->session->userdata('logged_in')) {
 			redirect('login');
 		}
@@ -16,21 +16,17 @@ class Dashboard extends CI_Controller
 
 	public function index()
 	{
-		if ($this->session->userdata('logged_in') == TRUE) {
-
-			$data['content'] = 'Dashboard';
-			$data['jml_book'] = $this->M_Dashboard->get_jml_book();
-			$data['jml_transaction'] = $this->M_Dashboard->get_jml_transaction();
-			$data['jml_pengguna'] = $this->M_Dashboard->get_jml_pengguna();
-			$data['book_cat'] = $this->M_Dashboard->get_book_cat();
-			$data['sys_user'] = $this->M_Dashboard->get_sys_user();
-			$data['book_stock'] = $this->M_Dashboard->get_book_stock();
-			$data['sales_p'] = $this->M_Dashboard->get_sales_p();
-			$this->load->view('template', $data);
-
-		} else {
-			redirect('admin/login');
-		}
+		$data = [
+			'content' => 'Dashboard',
+			'allBooks' => $this->DashboardModel->countTableRows('book'),
+			'totalTransactionAmount' => $this->DashboardModel->sumTableColumn('transaction', 'total'),
+			'countTransactions' => $this->DashboardModel->countTransactionsByUserLevel(),
+			'bookCategory' => $this->DashboardModel->countTableRows('book_category'),
+			'countUserLogin' => $this->DashboardModel->countTableRows('user'),
+			'bookStock' => $this->DashboardModel->sumTableColumn('book', 'stock'),
+			'last24Hours' => $this->DashboardModel->sumTableColumn('transaction', 'total', ['transaction_date' => date('Y-m-d')]),
+		];
+		$this->load->view('template', $data);
 	}
 
 	public function chart_data()

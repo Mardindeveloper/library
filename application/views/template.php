@@ -20,9 +20,6 @@
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/DataTables/datatables.min.css">
 	<!-- Custom stylesheet - for your changes-->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom.css">
-	<!-- Tweaks for older IEs--><!--[if lt IE 9]>
-				<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-				<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 	<script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
 
 </head>
@@ -36,18 +33,24 @@
 					<div class="navbar-holder d-flex align-items-center justify-content-between">
 						<!-- Navbar Header-->
 						<div class="navbar-header">
-							<!-- Navbar Brand --><a href="#" class="navbar-brand">
+							<!-- Navbar Brand -->
+							<a href="#" class="navbar-brand">
 								<div class="brand-text brand-big"><span>CI-BSMS</span></div>
 								<div class="brand-text brand-small">CI-BSMS</div>
 							</a>
-							<!-- Toggle Button--><a id="toggle-btn" href="#"
-								class="menu-btn active"><span></span><span></span><span></span></a>
+							<!-- Toggle Button-->
+							<a id="toggle-btn" href="#" class="menu-btn active">
+								<span></span><span></span><span></span>
+							</a>
 						</div>
 						<!-- Navbar Menu -->
 						<ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
 							<!-- Logout    -->
-							<li class="nav-item"><a href="<?php echo base_url('/logout') ?>"
-									class="nav-link logout">Logout<i class="fa fa-power-off"></i></a></li>
+							<li class="nav-item">
+								<a href="<?= site_url('Auth/logout'); ?>" class="nav-link logout">Logout<i
+										class="fa fa-power-off"></i>
+								</a>
+							</li>
 						</ul>
 					</div>
 				</div>
@@ -77,7 +80,6 @@
 					<?php
 					if ($this->session->userdata('level') == 'admin') {
 						echo '
-                        
                           <li>
                               <a href="' . base_url('category') . '">
                                   <i class="fa fa-bookmark"></i>
@@ -89,11 +91,29 @@
                                 <i class="fa fa-book"></i>
                                 <span>Books</span>
                             </a>
-                        </li>
+                          </li>
+						  <li>
+                            <a href="' . base_url('book/loanableBooks') . '">
+                                <i class="fa fa-handshake"></i>
+                                <span>Loanable Books</span>
+                            </a>
+                          </li>
+						  <li>
+                              <a href="' . base_url('book/author') . '">
+                                  <i class="fa fa-pencil"></i>
+                                  <span>Author</span>
+                              </a>
+                          </li>
                           <li>
                             <a href="' . base_url('transaction') . '">
                                 <i class="fa fa-dollar"></i>
                                 <span>Transaction</span>
+                            </a>
+                          </li>
+						  <li>
+                            <a href="' . base_url('loan') . '">
+                                <i class="fa fa-exchange"></i>
+                                <span>User Loan</span>
                             </a>
                           </li>
                           <li>
@@ -110,28 +130,25 @@
                             </a>
                           </li>';
 					} elseif ($this->session->userdata('level') == 'cashier') {
-						echo '<li>
-										<a href="' . base_url('transaction') . '">
-												<i class="fa fa-dollar"></i>
-												<span>Manage Sales</span>
-										</a>
-								</li>
-								<li>
-									<a href="' . base_url('history') . '">
-											<i class="fa fa-history"></i>
-											<span>History</span>
-									</a>
-								</li>';
+						echo
+							'<li>
+							<a href="' . base_url('transaction') . '">
+								<i class="fa fa-dollar"></i>
+								<span>Manage Sales</span>
+							</a>
+						</li>
+						<li>
+							<a href="' . base_url('history') . '">
+								<i class="fa fa-history"></i>
+								<span>History</span>
+							</a>
+						</li>';
 					}
 					?>
 				</ul>
 			</nav>
 			<div class="content-inner">
-				<?php
-
-				$this->load->view($content);
-
-				?>
+				<?php $this->load->view($content); ?>
 			</div>
 		</div>
 	</div>

@@ -51,29 +51,31 @@
 								}
 								?>
 								<form method="post" class="form-validate"
-									action="<?php echo base_url('/admin/proses_register') ?>">
+									action="<?=  base_url('register') ?>">
 									<h3 class="fw-bold text-muted text-center mb-4">Creating a New Account</h3>
 									<div class="form-group">
-										<input id="fullname" type="text" name="fullname" required data-msg="Please enter your Name"
-											class="input-material">
+										<input id="fullname" type="text" name="fullname" required
+											data-msg="Please enter your Name" class="input-material">
 										<label for="login-fullname" class="label-material">Full Name</label>
 									</div>
 
 									<div class="form-group">
-										<input id="username" type="text" name="username" required data-msg="Please enter your username"
-											class="input-material">
+										<input id="username" type="text" name="username" required
+											data-msg="Please enter your username" class="input-material">
 										<label for="login-username" class="label-material">Username</label>
 									</div>
 
 									<div class="form-group">
-										<input id="password" type="password" name="password" required data-msg="Please enter your password"
-											class="input-material">
+										<input id="password" type="password" name="password" required
+											data-msg="Please enter your password" class="input-material">
 										<label for="login-password" class="label-material">Password</label>
 									</div>
 									<div class="d-flex justify-content-end align-items-center">
-										<a href="<?php echo base_url('/login') ?>" class="text-decoration-none mr-3">Already have an
+										<a href="<?= base_url('login') ?>"
+											class="text-decoration-none mr-3">Already have an
 											account? Login here</a>
-										<input type="submit" name="submit" class="btn btn-primary rounded-1" value="Register">
+										<input type="submit" name="submit" class="btn btn-primary rounded-1"
+											value="Register">
 									</div>
 									<!-- This should be submit button but I replaced it with <a> for demo purposes-->
 								</form>

@@ -18,7 +18,7 @@
 									<a href="<?php echo base_url('/book') ?>" class="text-secondary">
 										<div class="title"><span>Total Book</span></div>
 									</a>
-									<span class="number"><?php echo $jml_book->jml_book; ?></span>
+									<span class="number"><?php echo $allBooks ?? '0'; ?></span>
 								</div>
 							</div>
 						</div>
@@ -32,7 +32,7 @@
 									<a href="<?php echo base_url('/history') ?>" class="text-secondary">
 										<div class="title"><span>Earnings</span></div>
 									</a>
-									<span class="number"><?php echo '$' . $jml_transaction->jml_transaction; ?></span>
+									<span class="number"><?php echo '$' . $totalTransactionAmount ?? '0'; ?></span>
 								</div>
 							</div>
 						</div>
@@ -46,7 +46,7 @@
 									<a href="<?php echo base_url('/history') ?>" class="text-secondary">
 										<div class="title"><span>Total Transaction</span></div>
 									</a>
-									<span class="number"><?php echo $jml_pengguna->jml_pengguna; ?></span>
+									<span class="number"><?php echo $countTransactions ?? '0'; ?></span>
 								</div>
 							</div>
 						</div>
@@ -63,7 +63,7 @@
 									<a href="<?php echo base_url('/category') ?>" class="text-secondary">
 										<div class="title"><span>Categories</span></div>
 									</a>
-									<span class="number"><?php echo $book_cat->book_cat; ?></span>
+									<span class="number"><?php echo $bookCategory ?? '0'; ?></span>
 								</div>
 							</div>
 						</div>
@@ -77,7 +77,7 @@
 									<a href="<?php echo base_url('/user') ?>" class="text-secondary">
 										<div class="title"><span>System Users</span></div>
 									</a>
-									<span class="number"><?php echo $sys_user->sys_user; ?></span>
+									<span class="number"><?php echo $countUserLogin ?? ''; ?></span>
 								</div>
 							</div>
 						</div>
@@ -91,7 +91,7 @@
 									<a href="<?php echo base_url('/book') ?>" class="text-secondary">
 										<div class="title"><span>Stocks</span></div>
 									</a>
-									<span class="number"><?php echo $book_stock->book_stock; ?></span>
+									<span class="number"><?php echo $bookStock ?? '0'; ?></span>
 								</div>
 							</div>
 						</div>
@@ -109,14 +109,14 @@
 									<a href="<?php echo base_url('/history') ?>" class="text-secondary">
 										<div class="title"><span>Sales (24hrs)</span></div>
 									</a>
-									<span class="number"><?php echo '$' . $sales_p->sales_p; ?></span>
+									<span class="number"><?php echo '$' . $last24Hours ?? '0'; ?></span>
 								</div>
 							</div>
 						</div>
 					</div>
 
 				</div>
-
+<!-- 
 				<div class="row py-1">
 					<div class="col-xl-8 col-sm-4">
 						<canvas id="salesChart" width="400" height="200"></canvas>
@@ -125,7 +125,7 @@
 						<h3 class="text-center">Best Categories</h3>
 						<canvas id="topCategoriesChart" width="400" height="200"></canvas>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</section>
 	<?php } elseif (($this->session->userdata('level') == 'cashier')) { ?>
@@ -141,7 +141,7 @@
 									<a href="#" class="text-secondary">
 										<div class="title"><span>Total Book</span></div>
 									</a>
-									<span class="number"><?php echo $jml_book->jml_book; ?></span>
+									<span class="number"><?php echo $allBooks ?? ''; ?></span>
 								</div>
 							</div>
 						</div>
@@ -155,7 +155,7 @@
 									<a href="#" class="text-secondary">
 										<div class="title"><span>Categories</span></div>
 									</a>
-									<span class="number"><?php echo $book_cat->book_cat; ?></span>
+									<span class="number"><?php echo $bookCategory ?? ''; ?></span>
 								</div>
 							</div>
 						</div>
@@ -169,7 +169,7 @@
 									<a href="#" class="text-secondary">
 										<div class="title"><span>Total Transaction</span></div>
 									</a>
-									<span class="number"><?php echo $jml_pengguna->jml_pengguna; ?></span>
+									<span class="number"><?php echo $countTransactions ?? ''; ?></span>
 								</div>
 							</div>
 						</div>
@@ -186,7 +186,7 @@
 									<a href="#" class="text-secondary">
 										<div class="title"><span>Books Stock</span></div>
 									</a>
-									<span class="number"><?php echo $book_stock->book_stock; ?></span>
+									<span class="number"><?php echo $bookStock ?? ''; ?></span>
 								</div>
 							</div>
 						</div>
@@ -251,7 +251,7 @@
 					}]
 				},
 				options: {
-					responsive: false, // غیرفعال کردن ریسپانسیو
+					responsive: false,
 					plugins: {
 						legend: {
 							position: 'top'

@@ -66,6 +66,9 @@ class CI_Controller {
 	 */
 	public $load;
 
+	public $var;
+	public $benchmark;
+
 	/**
 	 * Class constructor
 	 *
