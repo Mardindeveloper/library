@@ -5,20 +5,13 @@
 </header>
 <div class="container-fluid">
 	<div class="table-agile-info">
-		<?php if ($this->session->userdata('level') == "admin"): {
-
-			} ?>
-
-			<?php if ($this->session->flashdata('message') != null) {
-				echo "<br><div class='alert alert-success alert-dismissible fade show' role='alert'>"
-					. $this->session->flashdata('message') . "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+		<?php if ($this->session->flashdata('message') != null):
+			$messageType = $this->session->flashdata('messageType');
+			echo "<br><div class='alert alert-$messageType alert-dismissible fade show' role='alert'>"
+				. $this->session->flashdata('message') . "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
 			<span aria-hidden='true'>&times;</span>
 			</button> </div>";
-			} ?>
-		<?php elseif ($this->session->userdata('level') == "cashier"): {
-
-			} ?>
-		<?php endif ?>
+		endif; ?>
 		<div class="card rounded-1 mt-3">
 			<div class="card-header">
 				<a href="#add" data-toggle="modal" class="btn btn-primary btn-sm rounded-1 pull-right"><i
@@ -45,18 +38,18 @@
 					</thead>
 					<tbody style="background-color: white;">
 						<?php $no = 0;
-						foreach ($get_category as $kat):
+						foreach ($allCategory as $category):
 							$no++; ?>
 
 							<tr>
 								<td><?= $no ?></td>
-								<td>#CA<?= $kat->category_code ?></td>
-								<td><?= $kat->category_name ?></td>
+								<td>#CA<?= $category->category_id ?></td>
+								<td><?= $category->category_name ?></td>
 								<td class="text-center">
-									<a href="#edit" onclick="edit('<?= $kat->category_code ?>')"
+									<a href="#edit" onclick="edit('<?= $category->category_id ?>')"
 										class="btn btn-primary  btn-sm rounded-1" data-toggle="modal"><i
 											class="fa fa-pencil"></i></a>
-									<a href="<?= base_url('/category/hapus/' . $kat->category_code) ?>"
+									<a href="<?= base_url('category/deleteCategory/' . $category->category_id) ?>"
 										onclick="return confirm('Are you sure you want to delete this category?')"
 										class="btn btn-danger btn-sm rounded-1"><i class="fa fa-trash"></i></a>
 								</td>
@@ -76,8 +69,8 @@
 							<span class="sr-only">Close</span>
 						</button>
 					</div>
-					<form action="<?= base_url('/category/add') ?>" method="post">
-						<div class="modal-body">	
+					<form action="<?= base_url('category/addCategory') ?>" method="post">
+						<div class="modal-body">
 							<div class="form-group row">
 								<div class="col-sm-3 offset-1"><label>Category Name</label></div>
 								<div class="col-sm-7">
@@ -86,7 +79,7 @@
 							</div>
 						</div>
 						<div class="modal-footer justify-content-end">
-							<input type="submit" name="save" value="Save" class="btn btn-primary btn-sm rounded-1">
+							<input type="submit" value="Save" class="btn btn-primary btn-sm rounded-1">
 							<button type="button" class="btn btn-default btn-sm border rounded-1"
 								data-dismiss="modal">Close</button>
 						</div>
@@ -103,9 +96,9 @@
 							<span class="sr-only">Close</span>
 						</button>
 					</div>
-					<form action="<?= base_url('/category/category_update') ?>" method="post">
+					<form action="<?= base_url('category/updateCategory') ?>" method="post">
 						<div class="modal-body">
-							<input type="hidden" name="category_code_lama" id="category_code_lama">
+							<input type="hidden" name="category_id" id="category_id">
 							<div class="form-group row">
 								<div class="col-sm-3 offset-1"><label>Category Name</label></div>
 								<div class="col-sm-7">
@@ -115,7 +108,7 @@
 							</div>
 						</div>
 						<div class="modal-footer justify-content-end">
-							<input type="submit" name="edit" value="Save" class="btn btn-primary btn-sm rounded-1">
+							<input type="submit" value="Save" class="btn btn-primary btn-sm rounded-1">
 							<button type="button" class="btn btn-default btn-sm border rounded-1"
 								data-dismiss="modal">Close</button>
 						</div>
@@ -133,12 +126,12 @@
 		function edit(a) {
 			$.ajax({
 				type: "post",
-				url: "<?= base_url() ?>index.php/category/edit_category/" + a,
+				url: "<?= base_url() ?>category/getCategoryById/" + a,
 				dataType: "json",
 				success: function (data) {
-					$("#category_code").val(data.category_code);
+					$("#category_code").val(data.category_id);
 					$("#category_name").val(data.category_name);
-					$("#category_code_lama").val(data.category_code);
+					$("#category_id").val(data.category_id);
 				}
 			});
 		}

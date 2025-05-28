@@ -3,11 +3,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Category extends CI_Controller
 {
-
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('m_category', 'kat');
+		$this->load->model('CategoryModel');
 
 		if (!$this->session->userdata('logged_in')) {
 			redirect('login');
@@ -15,50 +14,64 @@ class Category extends CI_Controller
 	}
 	public function index()
 	{
-		$data['get_category'] = $this->kat->get_category();
-		$data['content'] = "v_category";
+		$data = [
+			'content' => "category",
+			'allCategory' => $this->CategoryModel->get_category(),
+		];
 		$this->load->view('template', $data);
 	}
 
-	public function add()
+	public function addCategory()
 	{
-		if ($this->input->post('save')) {
-			if ($this->kat->save_kat()) {
-				$this->session->set_flashdata('message', 'Category Details has been added successfully');
-				redirect('category', 'refresh');
-			} else {
+		if ($this->input->method() === 'post') {
+			$data = $this->input->post();
+			if (!$this->CategoryModel->save_category($data)) {
 				$this->session->set_flashdata('message', 'Category Details has faile to add!');
-				redirect('category', 'refresh');
+			} else {
+				$this->session->set_flashdata('message', 'Category Details has been added successfully');
 			}
+			redirect('category', 'refresh');
 		}
 	}
-	public function edit_category($id)
+	public function getCategoryById($id)
 	{
-		$data = $this->kat->detail($id);
+		$data = $this->CategoryModel->get_category($id);
 		echo json_encode($data);
 	}
-	public function category_update()
+	public function updateCategory()
 	{
-		if ($this->input->post('edit')) {
-			if ($this->kat->edit_kat()) {
-				$this->session->set_flashdata('message', 'Category Details has been updated successfully');
-				redirect('category', 'refresh');
+		if ($this->input->method() === 'post') {
+			$data = $this->input->post();
+			if ($this->CategoryModel->save_category($data)) {
+				$this->session->set_flashdata([
+					'message' => 'Category update successfully!',
+					'messageType' => 'success'
+				]);
 			} else {
-				$this->session->set_flashdata('message', 'Category Details has faile to update!');
-				redirect('category', 'refresh');
+				$this->session->set_flashdata([
+					'message' => 'Category update failed!',
+					'messageType' => 'danger'
+				]);
 			}
+
+			redirect('category', 'refresh');
 		}
 	}
 
-	public function hapus($id = '')
+	public function deleteCategory($id = '')
 	{
-		if ($this->kat->hapus_kat($id)) {
-			$this->session->set_flashdata('message', 'Category Details has been deleted successfully');
-			redirect('category', 'refresh');
+		if ($this->CategoryModel->deleteCategory($id)) {
+			$this->session->set_flashdata([
+				'message' => 'Category deleted successfully!',
+				'messageType' => 'success'
+			]);
 		} else {
-			$this->session->set_flashdata('message', 'Failed to delete');
-			redirect('category', 'refresh');
+			$this->session->set_flashdata([
+				'message' => 'Category deleted Failed!',
+				'messageType' => 'danger'
+			]);
 		}
+		redirect('category', 'refresh');
 	}
 
 }
