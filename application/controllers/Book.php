@@ -7,7 +7,7 @@ class Book extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('m_book', 'book');
+		$this->load->model('BookModel');
 
 		if (!$this->session->userdata('logged_in')) {
 			redirect('login');
@@ -15,108 +15,95 @@ class Book extends CI_Controller
 	}
 	public function index()
 	{
-		$this->load->library('pagination');
-		$amount_data = $this->book->amount_data();
-		$data['get_book'] = $this->book->get_book();
-		$data['category'] = $this->book->data_category();
-		$data['content'] = "v_book";
+		$data = [
+			'get_book' => $this->BookModel->getBooks(),
+			'category' => $this->BookModel->getCategory(),
+			'authors' => $this->BookModel->getAuthor(),
+			'content' => 'listBook',
+		];
 
-		$data['total_rows'] = $amount_data;
-		$data['per_page'] = 1;
-		$from = $this->uri->segment(3);
-		$this->pagination->initialize($data);
-		$data['user'] = $this->book->get_book($data['per_page'], $from);
-
-		$this->load->view('template', $data, FALSE);
+		$this->load->view('template', $data);
 	}
-	public function add()
-	{
-		$this->form_validation->set_rules('book_title', 'book_title', 'trim|required');
-		$this->form_validation->set_rules('year', 'year', 'trim|required');
-		$this->form_validation->set_rules('price', 'price', 'trim|required');
-		$this->form_validation->set_rules('category', 'category', 'trim|required');
-		$this->form_validation->set_rules('publisher', 'publisher', 'trim|required');
-		$this->form_validation->set_rules('stock', 'stock', 'trim|required');
-		if ($this->form_validation->run() == TRUE) {
-			$config['upload_path'] = './assets/gambar/';
-			$config['allowed_types'] = 'gif|jpg|png|jpeg';
-			if ($_FILES['gambar']['name'] != "") {
-				$this->load->library('upload', $config);
 
-				if (!$this->upload->do_upload('gambar')) {
-					$this->session->set_flashdata('message', $this->upload->display_errors());
-					redirect('book', 'refresh');
-				} else {
-					if ($this->book->save_book($this->upload->data('file_name'))) {
-						$this->session->set_flashdata('message', 'Book has been added successfully');
-					} else {
-						$this->session->set_flashdata('message', 'Book has failed to Add');
-					}
-					redirect('book', 'refresh');
-				}
-			} else {
-				if ($this->book->save_book('')) {
-					$this->session->set_flashdata('message', 'Book has been added successfully');
-				} else {
-					$this->session->set_flashdata('message', 'Book has failed to Add');
-				}
-				redirect('book', 'refresh');
-			}
-		} else {
-			$this->session->set_flashdata('message', validation_errors());
+	// add and update Book
+	public function saveBook()
+	{
+		if ($this->input->method() !== 'post') {
 			redirect('book', 'refresh');
 		}
+
+		$this->form_validation->set_rules([
+			['field' => 'book_title', 'label' => 'book_title', 'rules' => 'trim|required'],
+			['field' => 'year', 'label' => 'year', 'rules' => 'trim|required'],
+			['field' => 'price', 'label' => 'price', 'rules' => 'trim|required'],
+			['field' => 'category_id', 'label' => 'category_id', 'rules' => 'trim|required'],
+			['field' => 'publisher', 'label' => 'publisher', 'rules' => 'trim|required'],
+			['field' => 'stock', 'label' => 'stock', 'rules' => 'trim|required'],
+		]);
+
+		if (!$this->form_validation->run()) {
+			$this->session->set_flashdata([
+				'message' => validation_errors(),
+				'messageType' => 'danger'
+			]);
+			redirect('book', 'refresh');
+		}
+
+		$data = $this->input->post();
+		$bookId = $data['book_id'] ?? '';
+		$fileName = '';
+		if ($_FILES['book_img']['name'] != "") {
+			$config['upload_path'] = './assets/picProduct/';
+			$config['allowed_types'] = 'gif|jpg|png|jpeg';
+			$config['max_size'] = 2048;
+			$this->load->library('upload', $config);
+
+			if (!$this->upload->do_upload('book_img')) {
+				$this->session->set_flashdata([
+					'message' => $this->upload->display_errors(),
+					'messageType' => 'danger'
+				]);
+				redirect('book', 'refresh');
+			}
+
+			$fileName = $this->upload->data('file_name');
+		}
+
+		if ($this->BookModel->saveBook($data, $fileName, $bookId)) {
+			$this->session->set_flashdata([
+				'message' => 'Book has been added successfully',
+				'messageType' => 'success'
+			]);
+		} else {
+			$this->session->set_flashdata([
+				'message' => 'Book has failed to Add',
+				'messageType' => 'danger'
+			]);
+		}
+		redirect('book', 'refresh');
 	}
 
-	public function edit_book($id)
+	public function getBookById($id)
 	{
-		$data = $this->book->detail($id);
+		$data = $this->BookModel->getBooks($id);
 		echo json_encode($data);
 	}
 
-	public function book_update()
+	public function deleteBook($bookId = '')
 	{
-		if ($this->input->post('save')) {
-			if ($_FILES['gambar']['name'] == "") {
-				if ($this->book->book_update_no_foto()) {
-					$this->session->set_flashdata('message', 'Book Details has been updated successfully.');
-					redirect('book');
-				} else {
-					$this->session->set_flashdata('message', 'Failed to update');
-					redirect('book');
-				}
-			} else {
-				$config['upload_path'] = './assets/gambar/';
-				$config['allowed_types'] = 'gif|jpg|png|jpeg';
-				$config['max_size'] = '100000000';
-
-				$this->load->library('upload', $config);
-
-				if (!$this->upload->do_upload('gambar')) {
-					$this->session->set_flashdata('message', 'failed to upload');
-					redirect('book');
-				} else {
-					if ($this->book->book_update_dengan_foto($this->upload->data("file_name"))) {
-						$this->session->set_flashdata('message', 'Updated successfully!');
-						redirect('book');
-					} else {
-						$this->session->set_flashdata('message', 'Failed to update');
-						redirect('book');
-					}
-				}
-			}
-		}
-	}
-
-	public function hapus($book_code = '')
-	{
-		if ($this->book->hapus_book($book_code)) {
-			$this->session->set_flashdata('message', 'Book has been deleted successfully.');
-			redirect('book', 'refresh');
-		} else {
-			$this->session->set_flashdata('message', 'Delete Failed');
+		if (!$this->BookModel->deleteBook($bookId)) {
+			$this->session->set_flashdata([
+				'message' => 'Delete Failed',
+				'messageType' => 'danger'
+			]);
 			redirect('book', 'refresh');
 		}
+
+		$this->session->set_flashdata([
+			'message' => 'Book has been deleted successfully',
+			'messageType' => 'success'
+		]);
+		redirect('book', 'refresh');
 	}
 
 }

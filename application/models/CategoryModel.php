@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class CategoryModel extends CI_Model
 {
 
-	public function get_category($id = '')
+	public function getCategory($id = '')
 	{
 		if ($id !== '') {
 			return $this->db->where('category_id', $id)
@@ -14,7 +14,7 @@ class CategoryModel extends CI_Model
 		return $this->db->get('book_category')->result();
 	}
 
-	public function save_category($data)
+	public function saveCategory($data)
 	{
 		if (!empty($data['category_id']) && $data['category_id'] == 0) {
 			return false;

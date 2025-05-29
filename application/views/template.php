@@ -99,7 +99,7 @@
                             </a>
                           </li>
 						  <li>
-                              <a href="' . base_url('book/author') . '">
+                              <a href="' . base_url('author') . '">
                                   <i class="fa fa-pencil"></i>
                                   <span>Author</span>
                               </a>

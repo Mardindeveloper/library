@@ -36,6 +36,7 @@ CREATE TABLE `book` (
   `price` int NOT NULL,
   `book_img` varchar(100) NOT NULL,
   `publisher` varchar(100) NOT NULL,
+  `author_id` int NULL,
   `is_loanable` TINYINT(1) NOT NULL DEFAULT 0,
   `stock` int NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -122,6 +123,7 @@ ALTER TABLE `book_author`
   ADD CONSTRAINT `book_author_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `author` (`author_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `book` ADD CONSTRAINT `book_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `book_category` (`category_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `book` ADD CONSTRAINT `book_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `author` (`author_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `book_copy` ADD CONSTRAINT `book_copy_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 

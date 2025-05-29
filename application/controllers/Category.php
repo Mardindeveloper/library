@@ -16,7 +16,7 @@ class Category extends CI_Controller
 	{
 		$data = [
 			'content' => "category",
-			'allCategory' => $this->CategoryModel->get_category(),
+			'allCategory' => $this->CategoryModel->getCategory(),
 		];
 		$this->load->view('template', $data);
 	}
@@ -25,7 +25,7 @@ class Category extends CI_Controller
 	{
 		if ($this->input->method() === 'post') {
 			$data = $this->input->post();
-			if (!$this->CategoryModel->save_category($data)) {
+			if (!$this->CategoryModel->saveCategory($data)) {
 				$this->session->set_flashdata('message', 'Category Details has faile to add!');
 			} else {
 				$this->session->set_flashdata('message', 'Category Details has been added successfully');
@@ -35,14 +35,14 @@ class Category extends CI_Controller
 	}
 	public function getCategoryById($id)
 	{
-		$data = $this->CategoryModel->get_category($id);
+		$data = $this->CategoryModel->getCategory($id);
 		echo json_encode($data);
 	}
 	public function updateCategory()
 	{
 		if ($this->input->method() === 'post') {
 			$data = $this->input->post();
-			if ($this->CategoryModel->save_category($data)) {
+			if ($this->CategoryModel->saveCategory($data)) {
 				$this->session->set_flashdata([
 					'message' => 'Category update successfully!',
 					'messageType' => 'success'
