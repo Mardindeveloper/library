@@ -16,7 +16,7 @@ class AuthModel extends CI_Model
 			if (password_verify($data['password'], $dataUser->password)) {
 				$dataSession = [
 					'logged_in' => true,
-					"user_code" => $dataUser->user_code,
+					"user_code" => $dataUser->user_id,
 					'username' => $dataUser->username,
 					'fullname' => $dataUser->fullname,
 					'level' => $dataUser->level,

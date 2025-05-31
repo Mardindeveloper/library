@@ -8,7 +8,7 @@ class Transaction extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('m_transaction', 'trans');
-		$this->load->model('m_book', 'book');
+		$this->load->model('BookModel', 'book');
 
 		if (!$this->session->userdata('logged_in')) {
 			redirect('login');
@@ -17,7 +17,7 @@ class Transaction extends CI_Controller
 	public function index()
 	{
 		$data['transaction'] = $this->trans->tm_transaction();
-		$data['get_book'] = $this->book->get_book();
+		$data['get_book'] = $this->book->getBooks();
 		$data['content'] = "v_transaction";
 		$this->load->view('template', $data, FALSE);
 	}
@@ -29,9 +29,9 @@ class Transaction extends CI_Controller
 			$this->session->set_flashdata('message', 'Out of stock');
 			redirect('transaction', 'refresh');
 		}
-		$detail = $this->book->detail($id);
+		$detail = $this->book->getBooks($id);
 		$data = array(
-			'id' => $detail->book_code,
+			'id' => $detail->book_id,
 			'qty' => 1,
 			'price' => $detail->price,
 			'name' => $detail->book_title,
@@ -53,7 +53,7 @@ class Transaction extends CI_Controller
 			}
 			redirect('transaction');
 		} elseif ($this->input->post('pay')) {
-			$this->form_validation->set_rules('user_code', 'user', 'trim|required');
+			$this->form_validation->set_rules('user_id', 'user', 'trim|required');
 			$this->form_validation->set_rules('buyer_name', 'buyer_name', 'trim|required');
 			if ($this->form_validation->run() == TRUE) {
 				$id = $this->trans->save_cart_db();
@@ -103,6 +103,13 @@ class Transaction extends CI_Controller
 		$this->load->view('print_note', $data);
 	}
 
+	public function filter()
+	{
+		$type = $this->input->post('type');
+		$books = $this->trans->getBooksByType($type);
+
+		echo json_encode($books);
+	}
 }
 
 /* End of file transaction.php */

@@ -8,15 +8,18 @@ class M_history extends CI_Model
 	{
 		if ($this->session->userdata('level') == 'cashier') {
 			return $this->db
-				->join('user', 'user.user_code = transaction.user_code')
-				->order_by('tgl', 'DESC')
-				->where('transaction.user_code', $this->session->userdata('user_code')) // 👈 مشخص شده
+				->join('user', 'user.user_id  = transaction.user_id ')
+				->order_by('transaction_date', 'DESC')
+				->where('transaction.user_id', $this->session->userdata('user_code'))
 				->get('transaction')
 				->result();
 		}
-		
-		return $this->db->join('user', 'user.user_code = transaction.user_code')
-			->order_by('tgl', 'DESC')
+
+		return $this->db
+			->join('user', 'user.user_id  = transaction.user_id ')
+			->join('transaction_detail', 'transaction.transaction_id  = transaction_detail.transaction_id ')
+			->join('book', 'book.book_id  = transaction_detail.book_id ')
+			->order_by('transaction_date', 'DESC')
 			->get('transaction')
 			->result();
 	}

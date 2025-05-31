@@ -68,7 +68,7 @@ CREATE TABLE `book_author` (
 CREATE TABLE `book_copy` (
   `copy_id` int PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `book_id` int NULL,
-  `status` ENUM('available','on_loan','lost','maintenance') NOT NULL DEFAULT 'available',
+  `status` ENUM('for_sale ','loaned ','damaged','available_for_loan') NOT NULL DEFAULT 'for_sale',
   `barcode` varchar(50) UNIQUE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

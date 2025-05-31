@@ -1,9 +1,9 @@
 <h2 style="text-align:center; margin-bottom: 20px;">Transaction Note</h2>
 <p>
-	<strong>Transaction No. :</strong> <?= $transaction->transaction_code ?><br>
+	<strong>Transaction No. :</strong> <?= $transaction->transaction_id ?><br>
 	<strong>Cashier :</strong> <?= $transaction->fullname ?><br>
 	<strong>Customer :</strong> <?= $transaction->buyer_name ?><br>
-	<strong>Date :</strong> <?= $transaction->tgl ?><br>
+	<strong>Date :</strong> <?= $transaction->transaction_date  ?><br>
 </p>
 
 <div id="control-buttons"
@@ -33,15 +33,15 @@
 	</thead>
 	<tbody>
 		<?php $no = 0;
-		foreach ($this->trans->detail_transaction($transaction->transaction_code) as $book):
+		foreach ($this->trans->detail_transaction($transaction->transaction_id) as $book):
 			$no++; ?>
 			<tr style="background-color: <?= $no % 2 == 0 ? '#f9f9f9' : 'white' ?>">
 				<td style="padding: 8px; border: 1px solid #ddd; text-align:center;"><?= $no ?></td>
 				<td style="padding: 8px; border: 1px solid #ddd;"><?= $book->book_title ?></td>
 				<td style="padding: 8px; border: 1px solid #ddd; text-align:right;"><?= number_format($book->price) ?></td>
-				<td style="padding: 8px; border: 1px solid #ddd; text-align:center;"><?= $book->amount ?></td>
+				<td style="padding: 8px; border: 1px solid #ddd; text-align:center;"><?= $book->quantity ?></td>
 				<td style="padding: 8px; border: 1px solid #ddd; text-align:right;">
-					<?= number_format(($book->price * $book->amount)) ?>
+					<?= number_format(($book->price * $book->quantity)) ?>
 				</td>
 			</tr>
 		<?php endforeach ?>

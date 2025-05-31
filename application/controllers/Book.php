@@ -39,6 +39,7 @@ class Book extends CI_Controller
 			['field' => 'category_id', 'label' => 'category_id', 'rules' => 'trim|required'],
 			['field' => 'publisher', 'label' => 'publisher', 'rules' => 'trim|required'],
 			['field' => 'stock', 'label' => 'stock', 'rules' => 'trim|required'],
+			['field' => 'barcode', 'label' => 'barcode', 'rules' => 'trim|required'],
 		]);
 
 		if (!$this->form_validation->run()) {
@@ -52,6 +53,7 @@ class Book extends CI_Controller
 		$data = $this->input->post();
 		$bookId = $data['book_id'] ?? '';
 		$fileName = '';
+		$data['is_loanable'] = $this->input->post('is_loanable') ? 1 : 0;
 		if ($_FILES['book_img']['name'] != "") {
 			$config['upload_path'] = './assets/picProduct/';
 			$config['allowed_types'] = 'gif|jpg|png|jpeg';
@@ -104,6 +106,17 @@ class Book extends CI_Controller
 			'messageType' => 'success'
 		]);
 		redirect('book', 'refresh');
+	}
+
+	public function bookLoans () {
+		$data = [
+			'bookLoan' => $this->BookModel->getBookLoan(),
+			'category' => $this->BookModel->getCategory(),
+			'authors' => $this->BookModel->getAuthor(),
+			'content' => 'bookLoans',
+		];
+
+		$this->load->view('template', $data);
 	}
 
 }

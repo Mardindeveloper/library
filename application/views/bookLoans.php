@@ -12,24 +12,41 @@
 					<div class="card-title mb-0">List of Books</div>
 				</div>
 				<div class="card-body">
-					<select id="filterType" class="form-control w-25 mb-3">
-						<option value="for_sale">For Sale</option>
-						<option value="available_for_loan">Available For Loan</option>
-					</select>
-					<table class="table table-hover table-bordered" id="bookTable" style="background-color: #eef9f0;">
+					<table class="table table-hover table-bordered" id="example" style="background-color: #eef9f0;">
 						<thead style="background-color: #464b58; color:white;">
 							<tr>
 								<th>#</th>
 								<th>Book Title</th>
-								<th>Author Name</th>
 								<td>Category</td>
 								<th>Price</th>
 								<th>Stock</th>
 								<th>Act.</th>
 							</tr>
+
 						</thead>
 						<tbody style="background-color: white;">
+							<?php $no = 0;
+							$statusBookCopy = ['available_for_loan' => 'Available For Loan', 'loaned' => 'ON loan', 'for_sale' => 'Sale Only', 'damaged' => 'Damaged'];
+							foreach ($bookLoan as $book):
+								$no++; ?>
+								<tr>
 
+									<td><?= $no ?></td>
+									<td><?= $book->book_title ?></td>
+									<td><?= $book->category_name ?></td>
+									<td class="text-right"><?= $statusBookCopy[$book->status] ?></td>
+									<td class="text-right"><?= $book->author_name ?></td>
+									<td class="text-center">
+										<?php if ($book->status === 'available_for_loan'): ?>
+											<a href="<?= base_url('book/borrow/' . $book->book_id) ?>">
+												<button class="btn btn-outline-primary rounded-1 btn-sm" id="borrow">
+													<span class="fa fa-exchange" aria-hidden="true"></span>
+												</button>
+											</a>
+										<?php endif; ?>
+									</td>
+								</tr>
+							<?php endforeach ?>
 						</tbody>
 					</table>
 				</div>
@@ -46,7 +63,7 @@
 						$levelUser = $this->session->userdata('level'); ?>
 						<div class="mb-3">
 							Cashier : <?= $levelUser; ?>
-							<input type="hidden" name="user_id" value="<?= $this->session->userdata('user_code'); ?>">
+							<input type="hidden" name="user_code" value="<?= $this->session->userdata('user_code'); ?>">
 						</div>
 						<div class="mb-3">
 							<?php if ($levelUser === 'customer'): ?>
@@ -73,6 +90,8 @@
 								$no++; ?>
 								<input type="hidden" name="book_code[]" value="<?= $items['id'] ?>">
 								<input type="hidden" name="rowid[]" value="<?= $items['rowid'] ?>">
+
+
 								<tr>
 									<td><?= $no ?></td>
 									<td><?= $items['name'] ?></td>
@@ -119,44 +138,6 @@
 </div>
 <script>
 	$(document).ready(function () {
-		let siteUrl = '<?= base_url(); ?>';
-		let dataTable = $('#bookTable').DataTable();
-
-		function loadBooks(type) {
-			$.ajax({
-				url: '<?= base_url('transaction/filter') ?>',
-				type: 'POST',
-				data: { type: type },
-				dataType: 'json',
-				success: function (data) {
-					dataTable.clear().draw();
-
-					let id = 0;
-					data.forEach(book => {
-						id++;
-						dataTable.row.add([
-							id,
-							book.book_title,
-							book.author_name,
-							book.category_name,
-							book.price,
-							book.stock,
-							`<a href="${siteUrl + 'transaction/addcart/' + book.book_id}">
-							<button class="btn btn-outline-primary rounded-1 btn-sm" id="addcart">
-								<span class="fa fa-shopping-cart" aria-hidden="true"></span>
-							</button>
-						</a>`
-						]).draw(false);
-					});
-				}
-			});
-		}
-
-		loadBooks('for_sale');
-
-		$('#filterType').on('change', function () {
-			const selectedType = $(this).val();
-			loadBooks(selectedType);
-		});
+		$('#example').DataTable();
 	});
 </script>

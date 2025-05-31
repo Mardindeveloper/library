@@ -10,7 +10,7 @@ class M_transaction extends CI_Model
 	}
 	public function cek($book_code)
 	{
-		$cek_stock = $this->db->where('book_code', $book_code)->get('book')->row()->stock;
+		$cek_stock = $this->db->where('book_id', $book_code)->get('book')->row()->stock;
 		if ($cek_stock == 0) {
 			return 0;
 		} else {
@@ -22,7 +22,7 @@ class M_transaction extends CI_Model
 	{
 		$cek = 1;
 		for ($i = 0; $i < count($this->input->post('rowid')); $i++) {
-			$stock = $this->db->where('book_code', $this->input->post('book_code')[$i])
+			$stock = $this->db->where('book_id', $this->input->post('book_code')[$i])
 				->get('book')
 				->row()
 				->stock;
@@ -46,7 +46,7 @@ class M_transaction extends CI_Model
 			$book_code = $this->input->post('book_code')[$i];
 			$qty = $this->input->post('qty')[$i];
 
-			$book = $this->db->query("SELECT stock FROM book WHERE book_code = ? FOR UPDATE", [$book_code])->row();
+			$book = $this->db->query("SELECT stock FROM book WHERE book_id = ? FOR UPDATE", [$book_code])->row();
 
 			if (!$book) {
 				$this->db->trans_rollback();
@@ -59,21 +59,19 @@ class M_transaction extends CI_Model
 			}
 
 			$new_stock = $book->stock - $qty;
-			$this->db->where('book_code', $book_code)->update('book', ['stock' => $new_stock]);
+			$this->db->where('book_id', $book_code)->update('book', ['stock' => $new_stock]);
 		}
 
 		$object = array(
-			'user_code' => $this->input->post('user_code'),
+			'user_id' => $this->input->post('user_id'),
 			'buyer_name' => $this->input->post('buyer_name'),
-			'tgl' => date('Y-m-d'),
+			'transaction_date ' => date('Y-m-d'),
 			'total' => $this->input->post('total'),
-			'bookname' => $this->input->post('bookname'),
-			'book_qty' => $this->input->post('book_qty'),
 		);
 		$this->db->insert('transaction', $object);
 
-		$tm_nota = $this->db->order_by('transaction_code', 'desc')
-			->where('user_code', $this->input->post('user_code'))
+		$tm_nota = $this->db->order_by('transaction_id', 'desc')
+			->where('user_id', $this->input->post('user_id'))
 			->limit(1)
 			->get('transaction')
 			->row();
@@ -81,9 +79,9 @@ class M_transaction extends CI_Model
 		$hasil = [];
 		for ($i = 0; $i < count($this->input->post('rowid')); $i++) {
 			$hasil[] = array(
-				'transaction_code' => $tm_nota->transaction_code,
-				'book_code' => $this->input->post('book_code')[$i],
-				'amount' => $this->input->post('qty')[$i]
+				'transaction_id' => $tm_nota->transaction_id,
+				'book_id' => $this->input->post('book_code')[$i],
+				'quantity' => $this->input->post('qty')[$i]
 			);
 		}
 
@@ -94,43 +92,58 @@ class M_transaction extends CI_Model
 		if ($this->db->trans_status() === FALSE || !$proses) {
 			return 0;
 		} else {
-			return $tm_nota->transaction_code;
+			return $tm_nota->transaction_id;
 		}
 	}
 
 
 	public function detail_note($id_nota)
 	{
-		return $this->db->where('transaction_code', $id_nota)
-			->join('user', 'user.user_code=transaction.user_code')
+		return $this->db->where('transaction_id', $id_nota)
+			->join('user', 'user.user_id=transaction.user_id')
 			->get('transaction')
 			->row();
 	}
 
 	public function detail_transaction($id_nota)
 	{
-		return $this->db->where('transaction_code', $id_nota)
-			->join('book', 'book.book_code=transaction_detail.book_code')
-			->join('book_category', 'book_category.category_code=book.category_code')
+		return $this->db->where('transaction_id', $id_nota)
+			->join('book', 'book.book_id=transaction_detail.book_id')
+			->join('book_category', 'book_category.category_id=book.category_id')
 			->get('transaction_detail')->result();
 	}
 
 	public function get_transaction($transaction_code)
 	{
-		$this->db->where('transaction_code', $transaction_code);
+		$this->db->where('transaction_id', $transaction_code);
 		$transaction = $this->db->get('transaction')->row();
 
 		if (!$transaction)
 			return false;
 
-		// گرفتن اطلاعات کاربر (کَشیر)
-		$this->db->where('user_code', $transaction->user_code);
+		$this->db->where('user_id', $transaction->user_id);
 		$user = $this->db->get('user')->row();
 		$transaction->fullname = $user ? $user->fullname : '';
 
 		return $transaction;
 	}
+	public function getBooksByType($type)
+	{
+		return $this->db
+			->select('book.book_id, book.book_title, author.name as author_name, book_category.category_name, book.stock, book.price')
+			->from('book')
+			->join('author', 'author.author_id = book.author_id')
+			->join('book_category', 'book_category.category_id = book.category_id')
+			->where("EXISTS (
+					SELECT 1 FROM book_copy 
+					WHERE book_copy.book_id = book.book_id 
+					AND book_copy.status = " . $this->db->escape($type) . "
+				)", null, false)
+			->order_by('book.book_title', 'ASC')
+			->get()
+			->result_array();
 
+	}
 
 }
 

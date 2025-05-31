@@ -86,23 +86,17 @@
                                   <span>Category</span>
                               </a>
                           </li>
-                          <li>
-                            <a href="' . base_url('book') . '">
-                                <i class="fa fa-book"></i>
-                                <span>Books</span>
-                            </a>
-                          </li>
-						  <li>
-                            <a href="' . base_url('book/loanableBooks') . '">
-                                <i class="fa fa-handshake"></i>
-                                <span>Loanable Books</span>
-                            </a>
-                          </li>
 						  <li>
                               <a href="' . base_url('author') . '">
                                   <i class="fa fa-pencil"></i>
                                   <span>Author</span>
                               </a>
+                          </li>
+                          <li>
+                            <a href="' . base_url('book') . '">
+                                <i class="fa fa-book"></i>
+                                <span>Books</span>
+                            </a>
                           </li>
                           <li>
                             <a href="' . base_url('transaction') . '">
@@ -111,9 +105,9 @@
                             </a>
                           </li>
 						  <li>
-                            <a href="' . base_url('loan') . '">
-                                <i class="fa fa-exchange"></i>
-                                <span>User Loan</span>
+                            <a href="' . base_url('user/customer') . '">
+                                <i class="fa fa-user"></i>
+                                <span>Customer</span>
                             </a>
                           </li>
                           <li>

@@ -50,10 +50,10 @@
 									<td><?= $user->username ?></td>
 									<td><?= $user->level ?></td>
 									<td>
-										<a href="#edit" onclick="edit('<?= $user->user_code ?>')"
+										<a href="#edit" onclick="edit('<?= $user->user_id ?>')"
 											class="btn btn-primary btn-sm" data-toggle="modal"><i
 												class="fa fa-pencil"></i></a>
-										<a href="<?= base_url('/user/hapus/' . $user->user_code) ?>"
+										<a href="<?= base_url('/user/hapus/' . $user->user_id) ?>"
 											onclick="return confirm('Are you sure to delete it?')"
 											class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
 									</td>
@@ -176,7 +176,7 @@
 			url: "<?= base_url() ?>index.php/user/edit_user/" + a,
 			dataType: "json",
 			success: function (data) {
-				$("#user_code").val(data.user_code);
+				$("#user_code").val(data.user_id);
 				$("#fullname").val(data.fullname);
 				$("#username").val(data.username);
 				$("#password").val(data.password);
