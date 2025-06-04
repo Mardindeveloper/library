@@ -38,7 +38,7 @@ class BookModel extends CI_Model
 			unset($data['status']);
 		}
 
-		if (isset($data['barcode']) && !empty($data['barcode'])) {	
+		if (isset($data['barcode']) && !empty($data['barcode'])) {
 			$barcodeBook = $data['barcode'];
 			unset($data['barcode']);
 		} else {
@@ -93,21 +93,56 @@ class BookModel extends CI_Model
 	public function getBookLoan($id = null)
 	{
 		$this->db
-			->select('book.*, author.name as author_name, book_category.category_name, book_copy.status,GROUP_CONCAT(book_copy.barcode) as barcodes')
-			->from('book')
-			->join('author', 'author.author_id = book.author_id')
+			->select('loan.*, book.book_title as book_title, book_category.category_name')
+			->from('loan')
+			->join('book_copy', 'book_copy.copy_id = loan.copy_id')
+			->join('book', 'book.book_id = book_copy.book_id ')
 			->join('book_category', 'book_category.category_id = book.category_id')
-			->join('book_copy', 'book_copy.book_id = book.book_id', 'left')
-			->where('book.is_loanable', 1)
-			->group_by('book.book_id')
-			->order_by('book.year', 'DESC');
+			->order_by('return_date', 'ASC');
 
 		if ($id !== null) {
-			$this->db->where('book.book_id', $id);
+			$this->db->where('loan.loan_id', $id);
 			return $this->db->get()->row();
 		}
 
 		return $this->db->get()->result();
+	}
+
+	public function saveLoan($loan_id, $return_date, $user_id)
+	{
+		$this->db->where('loan_id', $loan_id);
+		$this->db->set('return_date', $return_date);
+		$this->db->set('status', 'returned');
+		$status = $this->db->update('loan');
+
+		if ($status) {
+			$copy_id = $this->db->select('copy_id')->where('loan_id', $loan_id)->get('loan')->row()->copy_id;
+			$this->db->where('copy_id', $copy_id);
+			$this->db->set('status', 'available_for_loan');
+			$this->db->update('book_copy');
+
+			$book_id = $this->db->select('book_id')->where('copy_id', $copy_id)->get('book_copy')->row()->book_id;
+			$this->db->where('book_id', $book_id);
+			$this->db->set('stock', 1);
+			$this->db->update('book');
+
+			$totalLoan = $this->db->select('COUNT(*) as total_loan')
+				->where('user_id', $user_id)
+				->where('status', 'on_loan')
+				->where('return_date IS NULL', null, false)
+				->get('loan')
+				->row()
+				->total_loan;
+
+			if ($totalLoan <= 4) {
+				$this->db->where('user_id', $user_id);
+				$this->db->set('can_loan', 1);
+				$this->db->update('user');
+			}
+
+			return true;
+		}
+		return false;
 	}
 
 }

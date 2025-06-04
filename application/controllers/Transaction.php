@@ -17,6 +17,7 @@ class Transaction extends CI_Controller
 	public function index()
 	{
 		$data['transaction'] = $this->trans->tm_transaction();
+		$data['customers'] = $this->trans->getCustomer();
 		$data['get_book'] = $this->book->getBooks();
 		$data['content'] = "v_transaction";
 		$this->load->view('template', $data, FALSE);
@@ -54,14 +55,29 @@ class Transaction extends CI_Controller
 			redirect('transaction');
 		} elseif ($this->input->post('pay')) {
 			$this->form_validation->set_rules('user_id', 'user', 'trim|required');
-			$this->form_validation->set_rules('buyer_name', 'buyer_name', 'trim|required');
+			$this->form_validation->set_rules('customer_id', 'customer_id', 'trim|required');
 			if ($this->form_validation->run() == TRUE) {
 				$id = $this->trans->save_cart_db();
+				$type_transaction = $this->input->post('type_transaction');
+
+				if (isset($id['code']) && $id['code'] == '1644') {
+					$this->cart->destroy();
+					$this->session->set_flashdata('message', $id['message']);
+					redirect('transaction');
+				}
+
+				if ($type_transaction == 'available_for_loan') {
+					$this->cart->destroy();
+					$this->session->set_flashdata('message', 'The book loan was successfully registered.');
+					$this->session->set_flashdata('message_type', 'success');
+					redirect('transaction');
+				}
 
 				if ($id) {
 					$data['transaction'] = $this->trans->detail_note($id);
 					$this->load->view('print_note', $data, FALSE);
 				} else {
+					$this->cart->destroy();
 					$this->session->set_flashdata('message', 'The purchase operation was not successful. There is insufficient inventory or another error occurred..');
 					redirect('transaction');
 				}
@@ -109,6 +125,12 @@ class Transaction extends CI_Controller
 		$books = $this->trans->getBooksByType($type);
 
 		echo json_encode($books);
+	}
+
+	public function cart_status()
+	{
+		$isEmpty = count($this->cart->contents()) === 0;
+		echo json_encode(['cart_empty' => $isEmpty]);
 	}
 }
 

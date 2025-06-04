@@ -82,22 +82,6 @@ CREATE TABLE `loan` (
   `status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `user_activity` (
-  `activity_id` int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `action` varchar(255) NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT (CURRENT_TIMESTAMP)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE `role` (
-  `role_id` int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE `user_role` (
-  `user_id` int NOT NULL,
-  `role_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- transaction
 ALTER TABLE `transaction`
@@ -128,16 +112,10 @@ ALTER TABLE `book` ADD CONSTRAINT `book_ibfk_2` FOREIGN KEY (`author_id`) REFERE
 ALTER TABLE `book_copy` ADD CONSTRAINT `book_copy_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- user
-ALTER TABLE `user_role`
-  ADD PRIMARY KEY(`user_id`, `role_id`),
-  ADD CONSTRAINT `user_role_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_role_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
 ALTER TABLE `loan`
   ADD CONSTRAINT `loan_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `loan_ibfk_2` FOREIGN KEY (`copy_id`) REFERENCES `book_copy` (`copy_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `user_activity` ADD CONSTRAINT `user_activity_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- Trigger
 DELIMITER //

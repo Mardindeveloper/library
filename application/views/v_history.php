@@ -38,12 +38,12 @@
 
 								<tr>
 									<td><?= $no ?></td>
-									<td><?= $history->buyer_name ?></td>
+									<td><?= $history->customer_fullname ?></td>
 									<td><?= $history->transaction_date ?></td>
 									<td><?= $history->book_title ?></td>
 									<td><?= $history->quantity ?></td>
 									<td>$<?= number_format($history->total) ?></td>
-									<td><?= $history->fullname ?></td>
+									<td><?= $history->user_fullname ?></td>
 									<td class="text-center">
 										<a href="<?= base_url('transaction/view_note/' . $history->transaction_id); ?>"
 											target="_blank" class="btn btn-success btn-sm rounded-1"><i

@@ -16,11 +16,17 @@ class M_history extends CI_Model
 		}
 
 		return $this->db
-			->join('user', 'user.user_id  = transaction.user_id ')
-			->join('transaction_detail', 'transaction.transaction_id  = transaction_detail.transaction_id ')
-			->join('book', 'book.book_id  = transaction_detail.book_id ')
+			->select('transaction.*,
+				u.fullname as user_fullname,
+				c.fullname as customer_fullname,
+				book.book_title, transaction_detail.quantity')
+			->from('transaction')
+			->join('user u', 'u.user_id = transaction.user_id ')
+			->join('user c', 'c.user_id = transaction.customer_id ')
+			->join('transaction_detail', 'transaction_detail.transaction_id = transaction.transaction_id ')
+			->join('book', 'book.book_id = transaction_detail.book_id ')
 			->order_by('transaction_date', 'DESC')
-			->get('transaction')
+			->get()
 			->result();
 	}
 

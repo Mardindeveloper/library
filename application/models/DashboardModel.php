@@ -26,11 +26,13 @@ class DashboardModel extends CI_Model
 		if ($this->session->userdata('level') == 'cashier') {
 			return $this->db->select('count(*) as transactions')
 				->where('user_code', $this->session->userdata('user_code'))
+				->where('type_transaction', 'for_sale')
 				->get('transaction')
 				->row()
 				->transactions;
 		}
 		return $this->db->select('count(*) as transactions')
+			->where('type_transaction', 'for_sale')
 			->get('transaction')
 			->row()
 			->transactions;

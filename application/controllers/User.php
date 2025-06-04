@@ -33,8 +33,12 @@ class User extends CI_Controller
 		}
 	}
 
-	public function edit_user($id)
+	public function edit_user($id = '')
 	{
+		if (empty($id)) {
+			redirect('user/customer', 'refresh');
+		}
+		
 		$data = $this->user->detail($id);
 		echo json_encode($data);
 	}
@@ -60,6 +64,23 @@ class User extends CI_Controller
 			$this->session->set_flashdata('message', 'Failed to delete');
 			redirect('user', 'refresh');
 		}
+	}
+
+	public function customer()
+	{
+		$data['get_user'] = $this->user->getCustomer();
+		$data['content'] = "customer";
+		$this->load->view('template', $data);
+	}
+
+	public function getLoanById($id = '')
+	{
+		if (empty($id)) {
+			redirect('user/customer', 'refresh');
+		}
+
+		$data = $this->user->getLoanCustomer($id);
+		echo json_encode($data);
 	}
 
 }

@@ -1,22 +1,22 @@
 <h2 style="text-align:center; margin-bottom: 20px;">Transaction Note</h2>
 <p>
 	<strong>Transaction No. :</strong> <?= $transaction->transaction_id ?><br>
-	<strong>Cashier :</strong> <?= $transaction->fullname ?><br>
-	<strong>Customer :</strong> <?= $transaction->buyer_name ?><br>
-	<strong>Date :</strong> <?= $transaction->transaction_date  ?><br>
+	<strong>Cashier :</strong> <?= $transaction->user_fullname ?><br>
+	<strong>Customer :</strong> <?= $transaction->customer_fullname ?><br>
+	<strong>Date :</strong> <?= $transaction->transaction_date ?><br>
 </p>
 
 <div id="control-buttons"
 	style="margin: 20px auto; display: flex; justify-content: space-between; align-items: center;">
 	<a href="<?= base_url('history') ?>">
 		<button style="padding: 8px 16px; background-color: #ccc; border: none; border-radius: 5px; cursor: pointer;">
-			بازگشت به تراکنش‌ها
+			Return to transactions
 		</button>
 	</a>
 
 	<button onclick="printInvoice()"
 		style="padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
-		چاپ فاکتور
+		Invoice printing
 	</button>
 </div>
 
@@ -33,7 +33,7 @@
 	</thead>
 	<tbody>
 		<?php $no = 0;
-		foreach ($this->trans->detail_transaction($transaction->transaction_id) as $book):
+		foreach ($this->trans->detail_transaction($transaction->transaction_id, $transaction->type_transaction) as $book):
 			$no++; ?>
 			<tr style="background-color: <?= $no % 2 == 0 ? '#f9f9f9' : 'white' ?>">
 				<td style="padding: 8px; border: 1px solid #ddd; text-align:center;"><?= $no ?></td>
@@ -63,10 +63,8 @@
 		}, 2500);
 	}
 	function printInvoice() {
-		// مخفی کردن دکمه‌ها هنگام چاپ
 		document.getElementById('control-buttons').style.display = 'none';
 		window.print();
-		// بعد از چاپ دکمه‌ها دوباره نمایش داده شوند
 		document.getElementById('control-buttons').style.display = 'block';
 	}
 </script>

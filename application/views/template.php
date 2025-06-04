@@ -104,6 +104,18 @@
                                 <span>Transaction</span>
                             </a>
                           </li>
+                          <li>
+                            <a href="' . base_url('history') . '">
+                                <i class="fa fa-history"></i>
+                                <span>History</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="' . base_url('book/bookLoans') . '">
+                                <i class="fa fa-exchange"></i>
+                                <span>Loaned Books</span>
+                            </a>
+                          </li>
 						  <li>
                             <a href="' . base_url('user/customer') . '">
                                 <i class="fa fa-user"></i>
@@ -111,16 +123,15 @@
                             </a>
                           </li>
                           <li>
-                            <a href="' . base_url('history') . '">
-                                <i class="fa fa-history"></i>
-                                <span>History</span>
-                            </a>
-                          </li>
-                          
-                          <li>
                             <a href="' . base_url('user') . '">
                                 <i class="fa fa-users"></i>
                                 <span>User Management</span>
+                            </a>
+                          </li>
+						  <li>
+                            <a href="' . base_url('report') . '">
+                                <i class="fa fa-list-alt"></i>
+                                <span>Report</span>
                             </a>
                           </li>';
 					} elseif ($this->session->userdata('level') == 'cashier') {
@@ -154,6 +165,8 @@
 	<script src="<?php echo base_url(); ?>assets/vendor/jquery-validation/jquery.validate.min.js"></script>
 	<!-- Main File-->
 	<script src="<?php echo base_url(); ?>assets/js/front.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 </body>
 
 </html>

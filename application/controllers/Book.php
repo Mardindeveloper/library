@@ -108,7 +108,8 @@ class Book extends CI_Controller
 		redirect('book', 'refresh');
 	}
 
-	public function bookLoans () {
+	public function bookLoans()
+	{
 		$data = [
 			'bookLoan' => $this->BookModel->getBookLoan(),
 			'category' => $this->BookModel->getCategory(),
@@ -117,6 +118,46 @@ class Book extends CI_Controller
 		];
 
 		$this->load->view('template', $data);
+	}
+
+	public function saveLoans()
+	{
+		if ($this->input->method() !== 'post') {
+			redirect('book/bookLoans', 'refresh');
+		}
+
+		$this->form_validation->set_rules([
+			['field' => 'return_date', 'label' => 'return_date', 'rules' => 'trim|required'],
+		]);
+
+		if (!$this->form_validation->run()) {
+			$this->session->set_flashdata([
+				'message' => validation_errors(),
+				'messageType' => 'danger'
+			]);
+			redirect('book/bookLoans', 'refresh');
+		}
+
+		$loan_id = $this->input->post('loan_id');
+		$return_date = $this->input->post('return_date');
+		$user_id = $this->input->post('user_id');
+		if ($this->BookModel->saveLoan($loan_id, $return_date, $user_id)) {
+			$this->session->set_flashdata([
+				'message' => 'Book has been added successfully',
+				'messageType' => 'success'
+			]);
+		} else {
+			$this->session->set_flashdata([
+				'message' => 'Book has failed to Add',
+				'messageType' => 'danger'
+			]);
+		}
+		redirect('book/bookLoans', 'refresh');
+	}
+
+	public function getLoanById($id) {
+		$data = $this->BookModel->getBookLoan($id);
+		echo json_encode($data);
 	}
 
 }

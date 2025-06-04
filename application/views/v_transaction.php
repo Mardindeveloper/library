@@ -42,6 +42,7 @@
 				</div>
 				<div class="card-body">
 					<form action="<?= base_url('/transaction/save') ?>" method="post" id="product-options">
+						<input type="hidden" name="type_transaction" id="type_transaction" value="for_sale">
 						<?php $cart_empty = count($this->cart->contents()) === 0;
 						$levelUser = $this->session->userdata('level'); ?>
 						<div class="mb-3">
@@ -49,12 +50,11 @@
 							<input type="hidden" name="user_id" value="<?= $this->session->userdata('user_code'); ?>">
 						</div>
 						<div class="mb-3">
-							<?php if ($levelUser === 'customer'): ?>
-								Customer's Name : <?= $this->session->userdata('fullname'); ?>
-								<input type="hidden" name="buyer_name" value="<?= $this->session->userdata('fullname'); ?>">
-							<?php else: ?>
-								Customer's Name : <input type="text" name="buyer_name" class="form-control" <?= $cart_empty ? 'disabled' : '' ?>>
-							<?php endif; ?>
+							<select type="text" name="customer_id" required class="form-control">
+								<?php foreach ($customers as $customer): ?>
+									<option value="<?= $customer->user_id; ?>"><?= $customer->fullname; ?></option>
+								<?php endforeach; ?>
+							</select>
 						</div>
 
 						<table class="table table-hover" id="example" style="background-color: white;">
@@ -76,8 +76,8 @@
 								<tr>
 									<td><?= $no ?></td>
 									<td><?= $items['name'] ?></td>
-									<td width="1"><input type="text" name="qty[]" value="<?= $items['qty'] ?>"
-											class="form-control" style="padding:4px;"></td>
+									<td width="1"><input  type="text" name="qty[]" value="<?= $items['qty'] ?>"
+											class="form-control qty-input" style="padding:4px;"></td>
 									<td class="text-right">$<?= number_format($items['price']) ?></td>
 									<td class="text-right">$<?= number_format($items['subtotal']) ?></td>
 									<td><a href="<?= base_url('/transaction/delete_cart/' . $items['rowid']) ?>"
@@ -104,8 +104,10 @@
 								href="<?= base_url('/transaction/clearcart') ?>">Clear Cart</a>
 						</div>
 					</form>
-					<?php if ($this->session->flashdata('message')): ?>
-						<div class="alert alert-warning alert-dismissible fade show" role="alert">
+					<?php if ($this->session->flashdata('message')): 
+						$messageType = $this->session->flashdata('message_type') ?? 'warning';
+						?>
+						<div class="alert alert-<?= $messageType ?> alert-dismissible fade show" role="alert">
 							<?= $this->session->flashdata('message'); ?>
 							<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
 								<span aria-hidden='true'>&times;</span>
@@ -121,6 +123,9 @@
 	$(document).ready(function () {
 		let siteUrl = '<?= base_url(); ?>';
 		let dataTable = $('#bookTable').DataTable();
+
+		let currentType = localStorage.getItem('selectedFilterType') || 'for_sale';
+		$('#filterType').val(currentType);
 
 		function loadBooks(type) {
 			$.ajax({
@@ -152,11 +157,32 @@
 			});
 		}
 
-		loadBooks('for_sale');
+		function checkCartStatus() {
+			$.ajax({
+				url: '<?= base_url('transaction/cart_status') ?>',
+				type: 'GET',
+				dataType: 'json',
+				success: function (response) {
+					if (!response.cart_empty) {
+						$('#filterType').prop('disabled', true);
+						$('.qty-input').prop('disabled', true);
+						$('#type_transaction').val(currentType);
+					} else {
+						$('#filterType').prop('disabled', false);
+					}
+				}
+			});
+		}
+
+		loadBooks(currentType);
+		checkCartStatus();
 
 		$('#filterType').on('change', function () {
-			const selectedType = $(this).val();
-			loadBooks(selectedType);
+			if (!$(this).prop('disabled')) {
+				const selectedType = $(this).val();
+				localStorage.setItem('selectedFilterType', selectedType); 
+				loadBooks(selectedType);
+			}
 		});
 	});
 </script>

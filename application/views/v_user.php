@@ -101,6 +101,7 @@
 								<select type="text" name="level" required class="form-control">
 									<option>admin</option>
 									<option>cashier</option>
+									<option>customer</option>
 								</select>
 							</div>
 						</div>
@@ -149,6 +150,7 @@
 								<select type="text" name="level" id="level" required class="form-control">
 									<option>admin</option>
 									<option>cashier</option>
+									<option>customer</option>
 								</select>
 							</div>
 						</div>
