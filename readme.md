@@ -1,20 +1,17 @@
-# **Book Store Management System in PHP - CodeIgniter 3.1.13**
+# **library System in PHP - CodeIgniter 3**
 
 =============================================
-**Database Name: Library**
-**Recommended PHP Version 7.4 and Newer**
-=============================================
-
-
-=============================================
-**Original**
-=============================================
-**Developed by MardinDeveloper**
+Database Name: Library
+Recommended PHP Version 7.4 and Newer
 =============================================
 
 =============================================
-**Admin Login**
+Developed by MardinDeveloper
 =============================================
-** Username: mardin **
-** Password: 123456 **
+
+=============================================
+Admin Login
+=============================================
+ Username: mardin 
+ Password: 123456 
 =============================================
