@@ -41,7 +41,8 @@
 						<div class="form d-flex align-items-center">
 							<div class="content">
 								<?php
-								$notification = $this->session->flashdata('notif');
+								$notification = $this->session->flashdata('message');
+								$this->session->unset_userdata('message');
 								if ($notification != NULL) {
 									echo '
                               <div class="alert alert-danger">

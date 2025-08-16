@@ -277,17 +277,17 @@
 							labels: labels,
 							datasets: [
 								{
-									label: 'کل امانت‌ها',
+									label: 'Total trusts',
 									data: totalLoans,
 									backgroundColor: 'rgba(54, 162, 235, 0.6)',
 								},
 								{
-									label: 'کتاب‌های برگشتی',
+									label: 'Returned books',
 									data: returned,
 									backgroundColor: 'rgba(75, 192, 192, 0.6)',
 								},
 								{
-									label: 'کتاب‌های برنگشتی',
+									label: 'Books of No Return',
 									data: notReturned,
 									backgroundColor: 'rgba(255, 99, 132, 0.6)',
 								}
@@ -296,10 +296,7 @@
 						options: {
 							responsive: true,
 							scales: {
-								y: {
-									beginAtZero: true,
-									min: 0
-								}
+								y: { beginAtZero: true }
 							}
 						}
 					});

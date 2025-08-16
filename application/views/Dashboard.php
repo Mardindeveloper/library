@@ -116,16 +116,6 @@
 					</div>
 
 				</div>
-<!-- 
-				<div class="row py-1">
-					<div class="col-xl-8 col-sm-4">
-						<canvas id="salesChart" width="400" height="200"></canvas>
-					</div>
-					<div class="col-xl-4 col-sm-4 d-flex justify-content-center align-items-center flex-column">
-						<h3 class="text-center">Best Categories</h3>
-						<canvas id="topCategoriesChart" width="400" height="200"></canvas>
-					</div>
-				</div> -->
 			</div>
 		</section>
 	<?php } elseif (($this->session->userdata('level') == 'cashier')) { ?>
@@ -197,68 +187,3 @@
 	<?php } ?>
 
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-	fetch('<?= base_url('dashboard/chart_data') ?>')
-		.then(response => response.json())
-		.then(data => {
-			const ctx = document.getElementById('salesChart').getContext('2d');
-			const chart = new Chart(ctx, {
-				type: 'line',
-				data: {
-					labels: data.labels,
-					datasets: [{
-						label: 'Sales in Last 7 Days',
-						data: data.totals,
-						borderColor: 'rgba(75, 192, 192, 1)',
-						backgroundColor: 'rgba(75, 192, 192, 0.2)',
-						fill: true
-					}]
-				},
-				options: {
-					responsive: true,
-					scales: {
-						y: {
-							beginAtZero: true
-						}
-					}
-				}
-			});
-		});
-
-	fetch('<?= base_url('dashboard/best_categories') ?>')
-		.then(res => res.json())
-		.then(data => {
-			const canvas = document.getElementById('topCategoriesChart');
-			canvas.width = 400;  // عرض به پیکسل
-			canvas.height = 400; // ارتفاع به پیکسل
-
-			const ctx = canvas.getContext('2d');
-			new Chart(ctx, {
-				type: 'pie',
-				data: {
-					labels: data.labels,
-					datasets: [{
-						data: data.totals,
-						backgroundColor: [
-							'#FF6384',
-							'#36A2EB',
-							'#FFCE56',
-							'#4BC0C0',
-							'#9966FF'
-						]
-					}]
-				},
-				options: {
-					responsive: false,
-					plugins: {
-						legend: {
-							position: 'top'
-						}
-					}
-				}
-			});
-		});
-
-</script>

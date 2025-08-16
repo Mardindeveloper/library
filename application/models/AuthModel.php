@@ -32,7 +32,13 @@ class AuthModel extends CI_Model
 
 	public function register($data)
 	{
-		return $this->db->insert('user', $data);
+		var_dump($data);
+		$this->db->insert('user', $data);
+		$result = $this->db->error();
+		if ($result['code'] !== 0) {
+			return false;
+		}
+		return true;
 	}
 
 	public function create_loan($data)
@@ -52,6 +58,3 @@ class AuthModel extends CI_Model
 	}
 
 }
-
-/* End of file M_admin.php */
-/* Location: ./application/models/M_admin.php */

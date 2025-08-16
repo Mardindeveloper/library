@@ -75,6 +75,3 @@ class Category extends CI_Controller
 	}
 
 }
-
-/* End of file category.php */
-/* Location: ./application/controllers/category.php */

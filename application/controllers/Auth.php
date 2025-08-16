@@ -56,8 +56,10 @@ class Auth extends CI_Controller
 			}
 
 			$data = $this->input->post();
+			unset($data['submit']);
 			$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 			$data['level'] = 'customer';
+			
 			if (!$this->AuthModel->register($data)) {
 				$this->session->set_flashdata('message', 'Wrong Username and Password');
 				redirect('register');

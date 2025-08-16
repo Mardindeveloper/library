@@ -8,7 +8,7 @@ class history extends CI_Controller
 	{
 		parent::__construct();
 		//Do your magic here
-		$this->load->model('M_history');
+		$this->load->model('HistoryModel');
 
 		if (!$this->session->userdata('logged_in')) {
 			redirect('login');
@@ -17,12 +17,9 @@ class history extends CI_Controller
 
 	public function index()
 	{
-		$data['get_history'] = $this->M_history->get_history();
+		$data['get_history'] = $this->HistoryModel->get_history();
 		$data['content'] = "v_history";
 		$this->load->view('template', $data, FALSE);
 	}
 
 }
-
-/* End of file history.php */
-/* Location: ./application/controllers/history.php */

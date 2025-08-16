@@ -7,7 +7,7 @@ class User extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('m_user', 'user');
+		$this->load->model('UserModel', 'user');
 
 		if (!$this->session->userdata('logged_in')) {
 			redirect('login');
@@ -84,6 +84,3 @@ class User extends CI_Controller
 	}
 
 }
-
-/* End of file User.php */
-/* Location: ./application/controllers/User.php */

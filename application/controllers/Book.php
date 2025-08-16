@@ -161,6 +161,3 @@ class Book extends CI_Controller
 	}
 
 }
-
-/* End of file book.php */
-/* Location: ./application/controllers/book.php */

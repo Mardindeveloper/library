@@ -7,7 +7,7 @@ class Transaction extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('m_transaction', 'trans');
+		$this->load->model('TransactionModel', 'trans');
 		$this->load->model('BookModel', 'book');
 
 		if (!$this->session->userdata('logged_in')) {
@@ -66,7 +66,7 @@ class Transaction extends CI_Controller
 					redirect('transaction');
 				}
 
-				if ($type_transaction == 'available_for_loan') {
+				if ($type_transaction == 'available_for_loan' && $id) {
 					$this->cart->destroy();
 					$this->session->set_flashdata('message', 'The book loan was successfully registered.');
 					$this->session->set_flashdata('message_type', 'success');
@@ -133,6 +133,3 @@ class Transaction extends CI_Controller
 		echo json_encode(['cart_empty' => $isEmpty]);
 	}
 }
-
-/* End of file transaction.php */
-/* Location: ./application/controllers/transaction.php */

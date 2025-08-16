@@ -35,5 +35,3 @@ class CategoryModel extends CI_Model
 	}
 }
 
-/* End of file M_category.php */
-/* Location: ./application/models/M_category.php */

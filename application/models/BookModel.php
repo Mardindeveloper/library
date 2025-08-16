@@ -146,6 +146,3 @@ class BookModel extends CI_Model
 	}
 
 }
-
-/* End of file M_book.php */
-/* Location: ./application/models/M_book.php */
