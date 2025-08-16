@@ -166,6 +166,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `user` (`user_id`, `fullname`, `username`, `password`, `level`, `can_loan`) VALUES
+(1, 'mardin', 'mardin', '$2y$10$7MoEZ9K0Ev0wVAcSHotRC.BSa6xS8PmVejxA6e4xgwGDzQ5L2zSzy', 'admin', 1);
+
 --
 -- Constraints for dumped tables
 --
